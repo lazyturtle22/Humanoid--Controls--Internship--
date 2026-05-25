@@ -214,15 +214,23 @@ class FrankaTrackingEnv(gym.Env):
     # Trajectory parameters
     TRAJ_CENTER_OFFSET = np.array([0.0, 0.0, -0.15])
     TRAJ_RADIUS = 0.12       # metres
-    TRAJ_PERIOD = 200        # steps for one full loop (at frame_skip=40 → 16 s)
+    TRAJ_PERIOD = 320        # steps for one full loop (at frame_skip=40 → 25.6 s) — slower = smoother
     TRAJ_Z_AMP = 0.05        # vertical bob amplitude
 
     # Noise sigmas (set to 0 to disable)
     NOISE_Q = 0.01
     NOISE_EE = 0.02
 
-    # Action delta limit
-    DELTA_CLIP = 0.05        # rad
+    # Action delta limit — smaller cap forces the policy to move gradually
+    DELTA_CLIP = 0.04        # rad (was 0.05)
+
+    # Reward weights — tuned for smooth motion
+    R_TRACK  = 1.0    # tracking error²  (primary objective)
+    R_ACTION = 0.05   # ||action||²      penalty on action magnitude   (was 0.01)
+    R_SMOOTH = 0.5    # ||Δaction||²     jerk penalty — main smoothness lever (was 0.05)
+    R_VEL    = 0.003  # ||qdot||²        joint-velocity penalty (new)
+    R_BONUS  = 0.5    # Gaussian proximity bonus at ≲3 cm
+    R_BONUS_K = 100.0 # sharpness of Gaussian
 
     def __init__(
         self,
@@ -391,12 +399,16 @@ class FrankaTrackingEnv(gym.Env):
         error = ee_true - target
         err_sq = float(np.dot(error, error))
 
+        # Joint velocity (noiseless, used only for penalty)
+        qd = self.data.qvel[self._qvel_ids]
+
         reward = (
-            -err_sq
-            - 0.01  * float(np.dot(action, action))
-            - 0.05  * float(np.dot(action - self._prev_action,
-                                    action - self._prev_action))
-            + 0.5   * float(np.exp(-100.0 * err_sq))
+            -self.R_TRACK  * err_sq
+            -self.R_ACTION * float(np.dot(action, action))
+            -self.R_SMOOTH * float(np.dot(action - self._prev_action,
+                                          action - self._prev_action))
+            -self.R_VEL    * float(np.dot(qd, qd))
+            +self.R_BONUS  * float(np.exp(-self.R_BONUS_K * err_sq))
         )
 
         self._prev_action = action.copy()
