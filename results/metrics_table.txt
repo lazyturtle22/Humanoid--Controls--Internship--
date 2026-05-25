@@ -1,0 +1,11 @@
+Trajectory   Noise  Mean err   Max err      RMSE  Success      Jerk
+-----------------------------------------------------------------
+circle          1x     1.68cm    18.66cm     2.04cm      71%    0.4239
+circle          2x     2.04cm    18.66cm     2.39cm      54%    0.4008
+circle          3x     2.57cm    18.66cm     2.95cm      37%    0.3833
+figure8         1x     1.69cm    10.39cm     1.87cm      71%    0.4367
+figure8         2x     2.11cm    10.39cm     2.33cm      50%    0.4042
+figure8         3x     2.58cm    10.39cm     2.87cm      37%    0.3862
+lissajous       1x     1.79cm    18.44cm     2.13cm      66%    0.4031
+lissajous       2x     2.21cm    18.47cm     2.55cm      48%    0.3862
+lissajous       3x     2.73cm    18.47cm     3.07cm      30%    0.3687

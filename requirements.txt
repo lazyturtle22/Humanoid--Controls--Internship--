@@ -1,0 +1,11 @@
+gymnasium>=1.2
+gymnasium-robotics>=1.4
+stable-baselines3[extra]>=2.0
+mujoco>=3.0
+imageio>=2.30
+imageio-ffmpeg>=0.4
+matplotlib>=3.7
+tensorboard>=2.13
+tqdm
+rich
+numpy

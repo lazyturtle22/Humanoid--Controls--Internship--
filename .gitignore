@@ -216,3 +216,15 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Training artefacts (too large for git — tracked via Git LFS or excluded)
+env/
+checkpoints/
+logs/
+models/
+results/*.mp4
+train_log.txt
+train_err.txt
+
+# MuJoCo temp files
+*.xml.tmp
