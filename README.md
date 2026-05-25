@@ -87,7 +87,6 @@ tensorboard --logdir logs/
 
 ---
 
-## Future work
 
 - **Residual RL on a Jacobian pseudo-inverse base controller**: the analytical controller handles posture in the null space, PPO outputs only a Cartesian corrective residual. This should halve required training steps since the base controller already satisfies most of the task and gives the policy a warm start.
 - **Orientation tracking**: augmenting the state with a 6D rotation representation and adding an orientation error term would make the policy suitable for manipulation tasks where grasp angle matters, at the cost of a larger observation space and harder reward shaping.
